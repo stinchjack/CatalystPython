@@ -8,6 +8,7 @@ import argparse
 import MySQLdb
 import csv
 import re
+import warnings
 
 def  help():
   """
@@ -166,14 +167,11 @@ def cleanData (rows):
     return cleanedRows
 
 def insertData (link, rows):
-
-
-
     # inserts each row of data into the table
     count = 0
     for row in rows:
-        # escape each value to avoid SQL injection problems
 
+        # escape each value to avoid SQL injection problems
         name = MySQLdb.escape_string(row[0])
         surname = MySQLdb.escape_string(row[1])
         email =  MySQLdb.escape_string(row[2])
@@ -183,23 +181,26 @@ def insertData (link, rows):
 
         sql = 'insert ignore into users (name, surname, email) values ( "' + name +'", "'+ surname +'", "'+ email +'") '
 
-        print sql
-
         result = execSQL  (link,  sql)
-        result.fetchone();
+
         if (result is False) :
-          # display error output
-          print os.linesep + "Could insert data into table" + os.linesep
-          return False
+            # display error output
+            print os.linesep + "Could insert data into table" + os.linesep
+            return False
+        else:
+            # Count rows processed for user output
+            count = count + 1
 
-        # Count rows processed for user output
-        count = count + 1
-
+    # the MySQLDB module supports transaction, so a commit is needed
+    link.commit()
     return count
 
 def run():
 
     # the main function
+
+    # treat warnings as errors
+    warnings.filterwarnings("error")
 
     #set up argument parser
     parser = argparse.ArgumentParser(description='Process command line flags',
