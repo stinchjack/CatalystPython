@@ -35,10 +35,10 @@ def run():
 
     #set up argument parser
     parser = argparse.ArgumentParser(description='Process command line flags',
-        add_help=False, usage = Suppress)
+        add_help=False, usage = argparse.SUPPRESS)
 
     # setup parser expected arguments. Default values setup where apprpriate
-    # default help behavoir overridden
+    # default help behavior overridden
     parser.add_argument("-u", type=str)
     parser.add_argument("-p", type=str)
     parser.add_argument("-h", type=str, default = 'localhost')
@@ -51,63 +51,31 @@ def run():
     #process the arguments and convert to dictionary
 
     try:
-        args = vars(parser.parse_args())
+        options = vars(parser.parse_args())
     except:
         help()
         return
 
-    if args['help']:
+    if options['help']:
+        help()
+        return
+
+    print options
+
+    CSVfile = options["file"]
+    DBuser = options["u"]
+    DBpassword = options["p"]
+    DBhost= options["h"]
+    DBname= options["dbname"]
+    dry_run = options["dry_run"]
+    create_table = options["create_table"]
+
+    if (not DBuser or not DBpassword):
+        print os.linesep + "MySQL username or password not set " + os.linesep
         help()
         return
 
 """
-
-  # process file name from command line
-  if (array_key_exists  ("file", options)):
-    CSVfile = options["file"]
-
-  else:
-    CSVfile = "users.csv" # default file name to use if none specified
-
-
-  # get MYSQL user name from command line
-  if (array_key_exists  ("u", options)):
-    DBuser = options["u"]
-
-
-  # get MYSQL user name from command line
-  if (array_key_exists  ("p", options)):
-    DBpassword = options["p"]
-
-
-  # get MYSQL hostname from command line
-  if (array_key_exists  ("h", options)):
-    DBhost= options["h"]
-
-  else:
-    DBhost= "localhost" # default if no host specified
-
-
-  # get MYSQL Database from command line
-  if (array_key_exists  ("dbname", options)):
-    DBname= options["dbname"]
-
-  else:
-    DBname= "catalystUsers" # default if no DB name specified
-
-
-  # get dry_run flag from
-  dry_run = array_key_exists  ("dry_run", options)
-
-  # get create_table flag from
-  create_table = array_key_exists  ("create_table", options)
-
-  if (not DBuser or not DBpassword):
-    print os.linesep + "MySQL username or password not set " + os.linesep
-    help()
-    return
-
-
   # Connect to MySQL
   DBconn = connectDB (DBuser, DBpassword, DBhost, DBname)
 
