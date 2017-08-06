@@ -27,7 +27,7 @@ Loads a CSV file with three columns (first name, surname, and email) into a data
 - Specify MySQL username and password on the command line (-u and -p flags).
 - Optionally, you may specify a hostname with -h flag (defult localhost)
 - Specify a database name to use using the --dbname flag (default catalystUsers)
-- Specify a input CSV using --file flag ((default users.csv)
+- Specify a input CSV using --file flag (default users.csv)
 
 See Command line Options, below.
 
