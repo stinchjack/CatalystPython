@@ -72,7 +72,7 @@ def createTable(link, tableExists):
     # If it exsits, remove so it can reuilt
     if (tableExists):
 
-    print (os.linesep + "removing existing table 'users' " + os.linesep)
+        print (os.linesep + "removing existing table 'users' " + os.linesep)
 
     sql = "drop table users"
     result = execSQL (link,  sql)
@@ -150,19 +150,49 @@ def cleanData (rows):
 
     for row in rows:
 
-    row[2] = row[2].strip() # trim spaces so filter_var can do its job
+        row[2] = row[2].strip() # trim spaces so filter_var can do its job
 
-    # Check for email address and skip row if not valid
-    if (isValidEmail(row[2])):
+        # Check for email address and skip row if not valid
+        if (isValidEmail(row[2])):
 
-      # Make sure first name and surname fields have first letter capital
-      row[0] =  ucfirst (row[0].strip())
-      row[1] =  ucfirst (row[0].strip())
+          # Make sure first name and surname fields have first letter capital
+          row[0] =  ucfirst (row[0].strip())
+          row[1] =  ucfirst (row[0].strip())
 
-    else:
-      print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
+        else:
+          print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
 
-    return cleanedRows
+        return cleanedRows
+
+def insertData (link, rows):
+    # inserts each row of data into the table
+    count = 0
+    for row in rows:
+
+        # escape each value to avoid SQL injection problems
+        #name = mysqli_real_escape_string(link, row[0])
+        #surname = mysqli_escape_string(link, row[1])
+        #email = mysqli_escape_string(link, row[2])
+
+        name = row[0]
+        surname = row[1]
+        email = row[2]
+
+        # create SQL insert statement and execute
+        # 'insert ignore' used to ignore insertions which fail due to unique key
+
+        sql = 'insert ignore into users (name, surname, email) values ( "' + name +'", "'+ surname +'", "'+ email +'") '
+
+        result = execSQL  (link,  sql)
+
+        if (result is False) :
+          # display error output
+          print os.linesep + 'Could insert data into table + os.linesep
+          return False
+        # Count rows processed for user output
+        count = count + 1
+
+    return count
 
 def run():
 
@@ -236,7 +266,6 @@ def run():
 
         return
 
-
     # Load CSV data
     data = loadCSV (CSVfile)
 
@@ -252,54 +281,8 @@ def run():
         print os.linesep + "Dry run - no data inserted into table " + os.linesep
     return
 
-"""
+    # Insert data into table
+    result = insertData(DBconn, data)
 
-  # Insert data into table
-  result = insertData(DBconn, data)
-
-  if (result ):
-    print " result rows inserted /updated " + os.linesep
-
-
-
-
-
-
-
-def insertData (link, rows):
-  # inserts each row of data into the table
-  count = 0
-  foreach (rows as row):
-
-    # escape each value to avoid SQL injection problems
-    name = mysqli_real_escape_string(link, row[0])
-    surname = mysqli_escape_string(link, row[1])
-    email = mysqli_escape_string(link, row[2])
-
-
-    # create SQL insert statement and execute
-    # 'insert ignore' used to ignore insertions which fail due to unique key
-
-    sql = 'insert ignore into users (name, surname, email) values ( "'. name .'", "'. surname .'", "'. email .'") '
-
-    result = mysqli_query (link,  sql)
-
-    if (not result) :
-      # display error output
-
-      print os.linesep + 'Could insert data into table + os.linesep
-      print "Debugging errno: " . mysqli_connect_errno() + os.linesep
-      print "Debugging error: " . mysqli_connect_error() + os.linesep
-      return False
-
-
-    # Count rows inserted for user output
-    count++
-
-
-
-  return count
-
-"""
-
-run()
+    if (result ):
+    print " $result CSV rows processed " + os.linesep
