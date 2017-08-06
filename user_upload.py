@@ -41,14 +41,18 @@ def connectDB (username, password, host, dbname):
       return False
 
 def execSQL (link, sql):
-    c=db.cursor()
+    c=link.cursor()
     try:
-        c.execute(sql, (result))
-      except Exception as e:
-          print "Error: Unable to execute '"+ sql +"'." + os.linesep
-          print str(e)
+        c.execute(sql)
+    except Exception as e:
+        print "Error: Unable to execute '"+ sql +"'." + os.linesep
+        print str(e)
 
-          return False
+        return False
+
+    result = c.fetchone()
+
+    print result
 
 def checkTable(link, DBtable):
   # check specified DB table exists
@@ -75,11 +79,11 @@ def run():
     parser.add_argument("-u", type=str)
     parser.add_argument("-p", type=str)
     parser.add_argument("-h", type=str, default = 'localhost')
-    parser.add_argument("--help", action =  'store_True')
+    parser.add_argument("--help", action =  'store_true')
     parser.add_argument("--dbname", type=str, default = 'catalystUsers')
     parser.add_argument("--file", type=str, default = 'users.csv')
-    parser.add_argument("--dry_run", action =  'store_True')
-    parser.add_argument("--create_table", action =  'store_True')
+    parser.add_argument("--dry_run", action =  'store_true')
+    parser.add_argument("--create_table", action =  'store_true')
 
     #process the arguments and convert to dictionary
 
@@ -113,13 +117,13 @@ def run():
         print "Could not connect to DB" + os.linesep
         return
 
-  # Check DB table exists
-  tableExists = checkTable (DBconn, "users")
+    # Check DB table exists
+    tableExists = checkTable (DBconn, "users")
 
-  # fail if table does not exist and table if not to be created
-  if (not tableExists and not create_table):
-    help()
-    return
+    # fail if table does not exist and table if not to be created
+    if (not tableExists and not create_table):
+        help()
+        return
 """
 
   # print error if users table already exists
