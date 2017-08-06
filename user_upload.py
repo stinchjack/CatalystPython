@@ -6,6 +6,8 @@ github:
 import os
 import argparse
 import MySQLdb
+import csv
+
 import pdb
 
 
@@ -107,6 +109,33 @@ def createTable(link, tableExists):
 
   return result
 
+def loadCSV (filename):
+
+    # Load data from CSV
+    with open('names.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(row)
+
+
+
+  file = fopen (filename, "r")
+  if (not file):
+    return False
+
+
+  rows = array()
+
+  while ((data = fgetcsv(file, 1000, ",")) not == False):
+
+      array_push (rows, data)
+
+
+
+  fclose (file)
+
+  return rows
+
 
 def run():
 
@@ -205,29 +234,7 @@ def run():
   if (result ):
     print " result rows inserted /updated " + os.linesep
 
-def loadCSV (filename):
 
-  if (not filename):
-    return False
-
-
-  # # Load data from CSV
-  file = fopen (filename, "r")
-  if (not file):
-    return False
-
-
-  rows = array()
-
-  while ((data = fgetcsv(file, 1000, ",")) not == False):
-
-      array_push (rows, data)
-
-
-
-  fclose (file)
-
-  return rows
 
 
 def cleanData (rows):
@@ -259,14 +266,6 @@ def cleanData (rows):
 
 
   return cleanedRows
-
-
-
-
-
-
-
-
 
 
 def insertData (link, rows):
