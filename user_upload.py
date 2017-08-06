@@ -139,7 +139,7 @@ def isValidEmail(email):
 
 def ucfirst (string):
     # converts the first letter of a string to a captial
-    return string[1].upper() + string[1:]
+    return string[0].upper() + string[1:]
 
 def cleanData (rows):
     # Cleans and validates data from CSV - assumes items in each row is first
@@ -159,12 +159,15 @@ def cleanData (rows):
           row[0] =  ucfirst (row[0].strip())
           row[1] =  ucfirst (row[0].strip())
 
+          cleanedRows.append (row);
         else:
           print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
 
     return cleanedRows
 
 def insertData (link, rows):
+
+    print rows
 
     # inserts each row of data into the table
     count = 0
