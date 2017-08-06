@@ -101,8 +101,6 @@ def createTable(link, tableExists):
   else:
     # display error output
     print os.linesep + "Could not create table" + os.linesep
-    print "Debugging errno: " . mysqli_connect_errno() + os.linesep
-    print "Debugging error: " . mysqli_connect_error() + os.linesep
     return False
 
 
