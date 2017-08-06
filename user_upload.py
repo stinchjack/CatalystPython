@@ -157,7 +157,7 @@ def cleanData (rows):
 
           # Make sure first name and surname fields have first letter capital
           row[0] =  ucfirst (row[0].strip())
-          row[1] =  ucfirst (row[0].strip())
+          row[1] =  ucfirst (row[1].strip())
 
           cleanedRows.append (row);
         else:
@@ -167,27 +167,26 @@ def cleanData (rows):
 
 def insertData (link, rows):
 
-    print rows
+
 
     # inserts each row of data into the table
     count = 0
     for row in rows:
-
         # escape each value to avoid SQL injection problems
-        #name = mysqli_real_escape_string(link, row[0])
-        #surname = mysqli_escape_string(link, row[1])
-        #email = mysqli_escape_string(link, row[2])
 
-        name = row[0]
-        surname = row[1]
-        email = row[2]
+        name = MySQLdb.escape_string(row[0])
+        surname = MySQLdb.escape_string(row[1])
+        email =  MySQLdb.escape_string(row[2])
 
         # create SQL insert statement and execute
         # 'insert ignore' used to ignore insertions which fail due to unique key
 
         sql = 'insert ignore into users (name, surname, email) values ( "' + name +'", "'+ surname +'", "'+ email +'") '
-        result = execSQL  (link,  sql)
 
+        print sql
+
+        result = execSQL  (link,  sql)
+        result.fetchone();
         if (result is False) :
           # display error output
           print os.linesep + "Could insert data into table" + os.linesep
