@@ -187,7 +187,7 @@ def insertData (link, rows):
 
         if (result is False) :
           # display error output
-          print os.linesep + 'Could insert data into table + os.linesep
+          print os.linesep + "Could insert data into table" + os.linesep
           return False
         # Count rows processed for user output
         count = count + 1
@@ -285,4 +285,4 @@ def run():
     result = insertData(DBconn, data)
 
     if (result ):
-    print " $result CSV rows processed " + os.linesep
+        print " $result CSV rows processed " + os.linesep
