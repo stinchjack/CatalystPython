@@ -102,7 +102,7 @@ def createTable(link, tableExists):
     return True
 
   else:
-    # display error output
+    # display error output on error
     print os.linesep + "Could not create table" + os.linesep
     return False
 
@@ -112,29 +112,17 @@ def createTable(link, tableExists):
 def loadCSV (filename):
 
     # Load data from CSV
-    with open('names.csv') as csvfile:
+    with open(filename) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             print(row)
 
 
-
-  file = fopen (filename, "r")
-  if (not file):
-    return False
-
-
-  rows = array()
-
-  while ((data = fgetcsv(file, 1000, ",")) not == False):
-
-      array_push (rows, data)
+     # array_push (rows, data)
 
 
 
-  fclose (file)
-
-  return rows
+  # return rows
 
 
 def run():
@@ -196,7 +184,6 @@ def run():
         help()
         return
 
-
     # print error if users table already exists
     if (tableExists and create_table):
         print os.linesep + "Table 'users' already exists " + os.linesep
@@ -205,21 +192,20 @@ def run():
     if (create_table):
         result = createTable(DBconn, tableExists)
 
-    if (create_table is False):
-      print os.linesep + "create_table flag specified, no data inserted" + os.linesep
+        if (result is not False):
+            print os.linesep + "create_table flag specified, no data inserted" + os.linesep
+
+        return
 
 
-    return
+    # Load CSV data
+    data = loadCSV (CSVfile)
+
+    if (CSVfile is False):
+        print "Could not load CSV CSVfile " + os.linesep
+        return
+
 """
-
-  # Load CSV data
-  data = loadCSV (CSVfile)
-
-  if (not CSVfile):
-    print "Could not load CSV CSVfile " + os.linesep
-    return
-
-
   # Clean CSV data
   data = cleanData (data)
   # Stop if dry_run flag set.
