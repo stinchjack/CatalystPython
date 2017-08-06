@@ -21,9 +21,8 @@ Loads a CSV file with three columns (first name, surname, and email) into a data
 - Mysql 5.4
 
 ## Installation:
--
 - Create a MySQL database.
-- sudo apt-get install python-mysqldb
+- Install mysqlclient module if needed, for example: sudo apt-get install python-mysqldb
 
 ## Usage
 - Create the database table using the --create_table table flag first time the script is run. If this flag is used when the table already exists, the table will be dropped and rebuilt.
