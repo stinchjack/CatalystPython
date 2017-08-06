@@ -40,26 +40,27 @@ def connectDB (username, password, host, dbname):
 
       return False
 
-def execSQL (link, sql):
+def execSQL (link, sql, displayError = True):
+    # Exectutes an SQL statement
+
     c=link.cursor()
     try:
         c.execute(sql)
     except Exception as e:
-        print "Error: Unable to execute '"+ sql +"'." + os.linesep
-        print str(e)
+        if displayError:
+            print "Error: Unable to execute '"+ sql +"'." + os.linesep
+            print str(e)
 
         return False
 
-    result = c.fetchone()
-
-    print result
+    return c
 
 def checkTable(link, DBtable):
   # check specified DB table exists
-  result = execSQL (link,  "SELECT 1 FROM users LIMIT 1")
+  result = execSQL (link,  "SELECT 1 FROM users LIMIT 1", false)
 
   if (result is False):
-    print os.linesep + "Table DBtable does not exist" + os.linesep
+    print os.linesep + "Table " + DBtable + " does not exist" + os.linesep
     return False
 
   else:
