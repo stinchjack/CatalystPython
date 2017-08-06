@@ -162,7 +162,7 @@ def cleanData (rows):
         else:
           print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
 
-        return cleanedRows
+    return cleanedRows
 
 def insertData (link, rows):
 
@@ -183,13 +183,13 @@ def insertData (link, rows):
         # 'insert ignore' used to ignore insertions which fail due to unique key
 
         sql = 'insert ignore into users (name, surname, email) values ( "' + name +'", "'+ surname +'", "'+ email +'") '
-
         result = execSQL  (link,  sql)
 
         if (result is False) :
           # display error output
           print os.linesep + "Could insert data into table" + os.linesep
           return False
+
         # Count rows processed for user output
         count = count + 1
 
