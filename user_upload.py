@@ -128,6 +128,45 @@ def loadCSV (filename):
       return False
 
 
+def isValidEmail(email):
+ # Checks if an email address is valid. Code from:
+ # http://pythoncentral.io/how-to-validate-an-email-address-using-python/
+ if len(email) > 7:
+     if re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None:
+         return True
+ return False
+
+def cleanData (rows):
+  # Cleans and validates data from CSV - assumes items in each row is first
+  # name, surname and email address
+
+  # Assumes no clumn headers
+
+  cleanedRows = []]
+
+  for row in rows:
+
+    row[2] = row[2].strip() # trim spaces so filter_var can do its job
+
+    # Check for email address and skip row if not valid
+    if (filter_var(row[2], FILTER_VALIDATE_EMAIL)):
+
+      # Make sure first name and surname fields have first letter capital
+      row[0] =  ucfirst (trim(strtolower(row[0])))
+      row[1] =  ucfirst (trim(strtolower(row[1])))
+
+      array_push (cleanedRows, row)
+
+
+    else:
+      print PHP_EOL + "Email address row[2] is not valid - this row will not be inserted into table  " + PHP_EOL
+
+
+
+  return cleanedRows
+
+
+
 def run():
 
     # the main function
