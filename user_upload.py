@@ -165,6 +165,7 @@ def cleanData (rows):
         return cleanedRows
 
 def insertData (link, rows):
+
     # inserts each row of data into the table
     count = 0
     for row in rows:
@@ -269,7 +270,7 @@ def run():
     # Load CSV data
     data = loadCSV (CSVfile)
 
-    if (CSVfile is False):
+    if (data is False):
         print "Could not load CSV CSVfile " + os.linesep
         return
 
@@ -286,3 +287,6 @@ def run():
 
     if (result ):
         print " $result CSV rows processed " + os.linesep
+
+
+run()
