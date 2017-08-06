@@ -9,8 +9,6 @@ import MySQLdb
 import pdb
 
 
-
-
 def  help():
   """
     Help output def
@@ -42,6 +40,28 @@ def connectDB (username, password, host, dbname):
 
       return False
 
+def execSQL (link, sql):
+    c=db.cursor()
+    try:
+        c.execute(sql, (result))
+      except Exception as e:
+          print "Error: Unable to execute '"+ sql +"'." + os.linesep
+          print str(e)
+
+          return False
+
+def checkTable(link, DBtable):
+  # check specified DB table exists
+  result = execSQL (link,  "SELECT 1 FROM users LIMIT 1")
+
+  if (result is False):
+    print os.linesep + "Table DBtable does not exist" + os.linesep
+    return False
+
+  else:
+    return True
+
+
 def run():
 
     # the main function
@@ -55,11 +75,11 @@ def run():
     parser.add_argument("-u", type=str)
     parser.add_argument("-p", type=str)
     parser.add_argument("-h", type=str, default = 'localhost')
-    parser.add_argument("--help", action =  'store_true')
+    parser.add_argument("--help", action =  'store_True')
     parser.add_argument("--dbname", type=str, default = 'catalystUsers')
     parser.add_argument("--file", type=str, default = 'users.csv')
-    parser.add_argument("--dry_run", action =  'store_true')
-    parser.add_argument("--create_table", action =  'store_true')
+    parser.add_argument("--dry_run", action =  'store_True')
+    parser.add_argument("--create_table", action =  'store_True')
 
     #process the arguments and convert to dictionary
 
@@ -72,8 +92,6 @@ def run():
     if options['help']:
         help()
         return
-
-    print options
 
     CSVfile = options["file"]
     DBuser = options["u"]
@@ -94,9 +112,6 @@ def run():
     if (not DBconn):
         print "Could not connect to DB" + os.linesep
         return
-"""
-
-
 
   # Check DB table exists
   tableExists = checkTable (DBconn, "users")
@@ -105,7 +120,7 @@ def run():
   if (not tableExists and not create_table):
     help()
     return
-
+"""
 
   # print error if users table already exists
   if (tableExists and create_table):
@@ -149,18 +164,18 @@ def run():
 def loadCSV (filename):
 
   if (not filename):
-    return false
+    return False
 
 
   # # Load data from CSV
   file = fopen (filename, "r")
   if (not file):
-    return false
+    return False
 
 
   rows = array()
 
-  while ((data = fgetcsv(file, 1000, ",")) not == FALSE):
+  while ((data = fgetcsv(file, 1000, ",")) not == False):
 
       array_push (rows, data)
 
@@ -205,16 +220,7 @@ def cleanData (rows):
 
 
 
-def checkTable(link, DBtable):
-  # check specified DB table exists
-  result = mysqli_query (link,  "SELECT 1 FROM users LIMIT 1")
 
-  if (not result):
-    print os.linesep + "Table DBtable does not exist" + os.linesep
-    return false
-
-  else:
-    return true
 
 
 
@@ -235,7 +241,7 @@ def createTable(link, tableExists):
       print os.linesep + "Could not drop table" + os.linesep
       print "Debugging errno: " . mysqli_connect_errno() + os.linesep
       print "Debugging error: " . mysqli_connect_error() + os.linesep
-      return false
+      return False
 
 
 
@@ -253,14 +259,14 @@ def createTable(link, tableExists):
 
   if (result):
     print (os.linesep + "Table users created " + os.linesep)
-    return true
+    return True
 
   else:
     # display error output
     print os.linesep + "Could not create table" + os.linesep
     print "Debugging errno: " . mysqli_connect_errno() + os.linesep
     print "Debugging error: " . mysqli_connect_error() + os.linesep
-    return false
+    return False
 
 
   return result
@@ -291,7 +297,7 @@ def insertData (link, rows):
       print os.linesep + 'Could insert data into table + os.linesep
       print "Debugging errno: " . mysqli_connect_errno() + os.linesep
       print "Debugging error: " . mysqli_connect_error() + os.linesep
-      return false
+      return False
 
 
     # Count rows inserted for user output
