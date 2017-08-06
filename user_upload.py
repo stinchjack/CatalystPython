@@ -57,7 +57,8 @@ def execSQL (link, sql, displayError = True):
 
 def checkTable(link, DBtable):
   # check specified DB table exists
-  result = execSQL (link,  "SELECT 1 FROM users LIMIT 1", false)
+
+  result = execSQL (link,  "SELECT 1 FROM users LIMIT 1", False)
 
   if (result is False):
     print os.linesep + "Table " + DBtable + " does not exist" + os.linesep
@@ -175,7 +176,7 @@ def run():
     if (create_table):
         result = createTable(DBconn, tableExists)
 
-    if (result is False):
+    if (create_table is False):
       print os.linesep + "create_table flag specified, no data inserted" + os.linesep
 
 
@@ -265,54 +266,6 @@ def cleanData (rows):
 
 
 
-
-
-def createTable(link, tableExists):
-
-  # If it exsits, remove so it can reuilt
-  if (tableExists):
-
-    print (os.linesep + "removing existing table 'users' " + os.linesep)
-
-    sql = "drop table users"
-    result = mysqli_query (link,  sql)
-    if (result):
-      print (os.linesep + "Table users dropped " + os.linesep)
-
-    else:
-      # display error output
-      print os.linesep + "Could not drop table" + os.linesep
-      print "Debugging errno: " . mysqli_connect_errno() + os.linesep
-      print "Debugging error: " . mysqli_connect_error() + os.linesep
-      return False
-
-
-
-
-  # SQL to creates a table 'users' in the database with
-  # name, surname, and email fields.\
-  sql =  "CREATE TABLE users
-      (
-         name VARCHAR(40),
-         surname VARCHAR(40),
-         email VARCHAR(40) UNIQUE
-      )"
-
-  result = mysqli_query (link,  sql)
-
-  if (result):
-    print (os.linesep + "Table users created " + os.linesep)
-    return True
-
-  else:
-    # display error output
-    print os.linesep + "Could not create table" + os.linesep
-    print "Debugging errno: " . mysqli_connect_errno() + os.linesep
-    print "Debugging error: " . mysqli_connect_error() + os.linesep
-    return False
-
-
-  return result
 
 
 
