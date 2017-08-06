@@ -7,9 +7,7 @@ import os
 import argparse
 import MySQLdb
 import csv
-
-import pdb
-
+import re
 
 def  help():
   """
@@ -110,19 +108,24 @@ def createTable(link, tableExists):
   return result
 
 def loadCSV (filename):
-
     # Load data from CSV
-    with open(filename) as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            print(row)
+    rows = []
 
+    try:
+        with open(filename) as csvfile:
 
-     # array_push (rows, data)
+            # Read CSV as dictionary, and extract values as array into the rows array.
+            # The docitReader removes the header row automatically
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                rows.append (row.values())
 
+        return rows
 
-
-  # return rows
+    except Exception as e:
+      print "Error: Unable to read CSV" + os.linesep
+      print str(e)
+      return False
 
 
 def run():
@@ -205,7 +208,7 @@ def run():
         print "Could not load CSV CSVfile " + os.linesep
         return
 
-"""
+
   # Clean CSV data
   data = cleanData (data)
   # Stop if dry_run flag set.
@@ -213,6 +216,7 @@ def run():
     print os.linesep + "Dry run - no data inserted into table " + os.linesep
     return
 
+"""
 
   # Insert data into table
   result = insertData(DBconn, data)
@@ -223,35 +227,7 @@ def run():
 
 
 
-def cleanData (rows):
-  # Cleans and validates data from CSV - assumes items in each row is first
-  # name, surname and email address
 
-  # Assumes first row is column headers
-  array_shift (rows)
-
-  cleanedRows = array()
-
-  foreach (rows as row):
-
-    row[2] = trim (row[2]) # trim spaces so filter_var can do its job
-
-    # Check for email address and skip row if not valid
-    if (filter_var(row[2], FILTER_VALIDATE_EMAIL)):
-
-      # Make sure first name and surname fields have first letter capital
-      row[0] =  ucfirst (trim(strtolower(row[0])))
-      row[1] =  ucfirst (trim(strtolower(row[1])))
-
-      array_push (cleanedRows, row)
-
-
-    else:
-      print PHP_EOL + "Email address row[2] is not valid - this row will not be inserted into table  " + PHP_EOL
-
-
-
-  return cleanedRows
 
 
 def insertData (link, rows):
