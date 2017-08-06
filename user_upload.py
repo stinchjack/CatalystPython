@@ -136,32 +136,30 @@ def isValidEmail(email):
          return True
  return False
 
+def ucfirst (string):
+    # converts the first letter of a string to a captial
+    return string[1].upper() + string[1:]
+
 def cleanData (rows):
   # Cleans and validates data from CSV - assumes items in each row is first
   # name, surname and email address
 
-  # Assumes no clumn headers
-
-  cleanedRows = []]
+  # Assumes no column headers in data
+  cleanedRows = []
 
   for row in rows:
 
     row[2] = row[2].strip() # trim spaces so filter_var can do its job
 
     # Check for email address and skip row if not valid
-    if (filter_var(row[2], FILTER_VALIDATE_EMAIL)):
+    if (isValidEmail(row[2])):
 
       # Make sure first name and surname fields have first letter capital
-      row[0] =  ucfirst (trim(strtolower(row[0])))
-      row[1] =  ucfirst (trim(strtolower(row[1])))
-
-      array_push (cleanedRows, row)
-
+      row[0] =  ucfirst (row[0].strip())
+      row[1] =  ucfirst (row[0].strip())
 
     else:
-      print PHP_EOL + "Email address row[2] is not valid - this row will not be inserted into table  " + PHP_EOL
-
-
+      print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
 
   return cleanedRows
 
@@ -248,11 +246,11 @@ def run():
         return
 
 
-  # Clean CSV data
-  data = cleanData (data)
-  # Stop if dry_run flag set.
-  if (dry_run):
-    print os.linesep + "Dry run - no data inserted into table " + os.linesep
+    # Clean CSV data
+    data = cleanData (data)
+    # Stop if dry_run flag set.
+    if (dry_run):
+        print os.linesep + "Dry run - no data inserted into table " + os.linesep
     return
 
 """
