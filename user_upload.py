@@ -69,8 +69,8 @@ def checkTable(link, DBtable):
 
 def createTable(link, tableExists):
 
-  # If it exsits, remove so it can reuilt
-  if (tableExists):
+    # If it exsits, remove so it can reuilt
+    if (tableExists):
 
     print (os.linesep + "removing existing table 'users' " + os.linesep)
 
@@ -84,28 +84,27 @@ def createTable(link, tableExists):
       print os.linesep + "Could not drop table" + os.linesep
       return False
 
-  # SQL to creates a table 'users' in the database with
-  # name, surname, and email fields.\
-  sql =  """CREATE TABLE users
+    # SQL to creates a table 'users' in the database with
+    # name, surname, and email fields.\
+    sql =  """CREATE TABLE users
       (
          name VARCHAR(40),
          surname VARCHAR(40),
          email VARCHAR(40) UNIQUE
       )"""
 
-  result = execSQL (link,  sql)
+    result = execSQL (link,  sql)
 
-  if (result is not False):
-    print (os.linesep + "Table users created " + os.linesep)
-    return True
+    if (result is not False):
+        print (os.linesep + "Table users created " + os.linesep)
+        return True
 
-  else:
-    # display error output on error
-    print os.linesep + "Could not create table" + os.linesep
-    return False
+    else:
+        # display error output on error
+        print os.linesep + "Could not create table" + os.linesep
+        return False
 
-
-  return result
+    return result
 
 def loadCSV (filename):
     # Load data from CSV
@@ -129,27 +128,27 @@ def loadCSV (filename):
 
 
 def isValidEmail(email):
- # Checks if an email address is valid. Regex from:
- # https://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address
- if len(email) > 7:
+     # Checks if an email address is valid. Regex from:
+     # https://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address
+    if len(email) > 7:
      regex = """(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"""
 
      if re.match(regex, email) != None:
          return True
- return False
+    return False
 
 def ucfirst (string):
     # converts the first letter of a string to a captial
     return string[1].upper() + string[1:]
 
 def cleanData (rows):
-  # Cleans and validates data from CSV - assumes items in each row is first
-  # name, surname and email address
+    # Cleans and validates data from CSV - assumes items in each row is first
+    # name, surname and email address
 
-  # Assumes no column headers in data
-  cleanedRows = []
+    # Assumes no column headers in data
+    cleanedRows = []
 
-  for row in rows:
+    for row in rows:
 
     row[2] = row[2].strip() # trim spaces so filter_var can do its job
 
@@ -163,9 +162,7 @@ def cleanData (rows):
     else:
       print os.linesep + "Email address " + row[2] + " is not valid - this row will not be inserted into table  " + os.linesep
 
-  return cleanedRows
-
-
+    return cleanedRows
 
 def run():
 
