@@ -85,12 +85,12 @@ def createTable(link, tableExists):
 
   # SQL to creates a table 'users' in the database with
   # name, surname, and email fields.\
-  sql =  "CREATE TABLE users
+  sql =  """CREATE TABLE users
       (
          name VARCHAR(40),
          surname VARCHAR(40),
          email VARCHAR(40) UNIQUE
-      )"
+      )"""
 
   result = execSQL (link,  sql)
 
