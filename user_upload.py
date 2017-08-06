@@ -287,7 +287,7 @@ def run():
     result = insertData(DBconn, data)
 
     if (result is not False):
-        print " $result CSV rows processed " + os.linesep
+        print "%d CSV rows processed %s" % (result, os.linesep)
 
 
 run()
