@@ -66,6 +66,48 @@ def checkTable(link, DBtable):
   else:
     return True
 
+def createTable(link, tableExists):
+
+  # If it exsits, remove so it can reuilt
+  if (tableExists):
+
+    print (os.linesep + "removing existing table 'users' " + os.linesep)
+
+    sql = "drop table users"
+    result = execSQL (link,  sql)
+    if (result is not False):
+      print (os.linesep + "Table users dropped " + os.linesep)
+
+    else:
+      # display error output
+      print os.linesep + "Could not drop table" + os.linesep
+      return False
+
+  # SQL to creates a table 'users' in the database with
+  # name, surname, and email fields.\
+  sql =  "CREATE TABLE users
+      (
+         name VARCHAR(40),
+         surname VARCHAR(40),
+         email VARCHAR(40) UNIQUE
+      )"
+
+  result = execSQL (link,  sql)
+
+  if (result is not False):
+    print (os.linesep + "Table users created " + os.linesep)
+    return True
+
+  else:
+    # display error output
+    print os.linesep + "Could not create table" + os.linesep
+    print "Debugging errno: " . mysqli_connect_errno() + os.linesep
+    print "Debugging error: " . mysqli_connect_error() + os.linesep
+    return False
+
+
+  return result
+
 
 def run():
 
@@ -125,24 +167,22 @@ def run():
     if (not tableExists and not create_table):
         help()
         return
-"""
-
-  # print error if users table already exists
-  if (tableExists and create_table):
-    print os.linesep + "Table 'users' already exists " + os.linesep
 
 
-  # if --create_table specified, create the table if it doesn't exist
-  if (create_table):
+    # print error if users table already exists
+    if (tableExists and create_table):
+        print os.linesep + "Table 'users' already exists " + os.linesep
 
-    result = createTable(DBconn, tableExists)
+    # if --create_table specified, create the table if it doesn't exist
+    if (create_table):
+        result = createTable(DBconn, tableExists)
 
-    if (result):
+    if (result is False):
       print os.linesep + "create_table flag specified, no data inserted" + os.linesep
 
 
     return
-
+"""
 
   # Load CSV data
   data = loadCSV (CSVfile)
