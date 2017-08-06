@@ -277,10 +277,11 @@ def run():
 
     # Clean CSV data
     data = cleanData (data)
+
     # Stop if dry_run flag set.
     if (dry_run):
         print os.linesep + "Dry run - no data inserted into table " + os.linesep
-    return
+        return
 
     # Insert data into table
     result = insertData(DBconn, data)
