@@ -34,7 +34,7 @@ def  help():
 def connectDB (username, password, host, dbname):
   # Connect to Database
   try:
-      link = MySQLdb.connect(passwd=passord,db=dbname, host = host, user=username)
+      link = MySQLdb.connect(passwd=password,db=dbname, host = host, user=username)
       return link
   except Exception as e:
       print "Error: Unable to connect to MySQL." + os.linesep
@@ -88,13 +88,14 @@ def run():
         help()
         return
 
-"""
-  # Connect to MySQL
-  DBconn = connectDB (DBuser, DBpassword, DBhost, DBname)
+    # Connect to MySQL
+    DBconn = connectDB (DBuser, DBpassword, DBhost, DBname)
 
-  if (not DBconn):
-    print "Could not connect to DB" + os.linesep
-    return
+    if (not DBconn):
+        print "Could not connect to DB" + os.linesep
+        return
+"""
+
 
 
   # Check DB table exists
