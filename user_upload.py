@@ -3,8 +3,11 @@ email: stinchjack@gmail.com
 Updated: 6 August 2017
 github:
 """
+import os
+import argparse
+import pdb
 
-run()
+
 
 
 def  help():
@@ -21,127 +24,258 @@ def  help():
   -u - MySQL username
   -p - MySQL password
   -h - MySQL host
-  -- dbname - specify a DB name
-  --help – output this help """
+  --dbname - specify a DB name
+  --help - output this help """
 
   print helpText
 
+def run():
 
-}
-""
+    # the main function
 
-""" def loadCSV (filename):
+    #set up argument parser
+    parser = argparse.ArgumentParser(description='Process command line flags',
+        add_help=False, usage = None)
 
-  if (!filename):
+    # setup parser expected arguments. Default values setup where apprpriate
+    # default help behavoir overridden
+    parser.add_argument("-u", type=str)
+    parser.add_argument("-p", type=str)
+    parser.add_argument("-h", type=str, default = 'localhost')
+    parser.add_argument("--help", action =  'store_true')
+    parser.add_argument("--dbname", type=str, default = 'catalystUsers')
+    parser.add_argument("--file", type=str, default = 'users.csv')
+    parser.add_argument("--dry_run", action =  'store_true')
+    parser.add_argument("--create_table", action =  'store_true')
+
+    #process the arguments and convert to dictionary
+
+    try:
+        args = vars(parser.parse_args())
+    except:
+        help()
+        return
+
+    if args['help']:
+        help()
+        return
+
+"""
+
+  # process file name from command line
+  if (array_key_exists  ("file", options)):
+    CSVfile = options["file"]
+
+  else:
+    CSVfile = "users.csv" # default file name to use if none specified
+
+
+  # get MYSQL user name from command line
+  if (array_key_exists  ("u", options)):
+    DBuser = options["u"]
+
+
+  # get MYSQL user name from command line
+  if (array_key_exists  ("p", options)):
+    DBpassword = options["p"]
+
+
+  # get MYSQL hostname from command line
+  if (array_key_exists  ("h", options)):
+    DBhost= options["h"]
+
+  else:
+    DBhost= "localhost" # default if no host specified
+
+
+  # get MYSQL Database from command line
+  if (array_key_exists  ("dbname", options)):
+    DBname= options["dbname"]
+
+  else:
+    DBname= "catalystUsers" # default if no DB name specified
+
+
+  # get dry_run flag from
+  dry_run = array_key_exists  ("dry_run", options)
+
+  # get create_table flag from
+  create_table = array_key_exists  ("create_table", options)
+
+  if (not DBuser or not DBpassword):
+    print os.linesep + "MySQL username or password not set " + os.linesep
+    help()
+    return
+
+
+  # Connect to MySQL
+  DBconn = connectDB (DBuser, DBpassword, DBhost, DBname)
+
+  if (not DBconn):
+    print "Could not connect to DB" + os.linesep
+    return
+
+
+  # Check DB table exists
+  tableExists = checkTable (DBconn, "users")
+
+  # fail if table does not exist and table if not to be created
+  if (not tableExists and not create_table):
+    help()
+    return
+
+
+  # print error if users table already exists
+  if (tableExists and create_table):
+    print os.linesep + "Table 'users' already exists " + os.linesep
+
+
+  # if --create_table specified, create the table if it doesn't exist
+  if (create_table):
+
+    result = createTable(DBconn, tableExists)
+
+    if (result):
+      print os.linesep + "create_table flag specified, no data inserted" + os.linesep
+
+
+    return
+
+
+  # Load CSV data
+  data = loadCSV (CSVfile)
+
+  if (not CSVfile):
+    print "Could not load CSV CSVfile " + os.linesep
+    return
+
+
+  # Clean CSV data
+  data = cleanData (data)
+  # Stop if dry_run flag set.
+  if (dry_run):
+    print os.linesep + "Dry run - no data inserted into table " + os.linesep
+    return
+
+
+  # Insert data into table
+  result = insertData(DBconn, data)
+
+  if (result ):
+    print " result rows inserted /updated " + os.linesep
+
+def loadCSV (filename):
+
+  if (not filename):
     return false
-  }
 
-  ## Load data from CSV
+
+  # # Load data from CSV
   file = fopen (filename, "r")
-  if (!file):
+  if (not file):
     return false
-  }
+
 
   rows = array()
 
-  while ((data = fgetcsv(file, 1000, ",")) !== FALSE):
+  while ((data = fgetcsv(file, 1000, ",")) not == FALSE):
 
       array_push (rows, data)
 
-  }
+
 
   fclose (file)
 
   return rows
-}
+
 
 def cleanData (rows):
-  // Cleans and validates data from CSV - assumes items in each row is first
-  // name, surname and email address
+  # Cleans and validates data from CSV - assumes items in each row is first
+  # name, surname and email address
 
-  // Assumes first row is column headers
+  # Assumes first row is column headers
   array_shift (rows)
 
   cleanedRows = array()
 
   foreach (rows as row):
 
-    row[2] = trim (row[2]) // trim spaces so filter_var can do its job
+    row[2] = trim (row[2]) # trim spaces so filter_var can do its job
 
-    // Check for email address and skip row if not valid
+    # Check for email address and skip row if not valid
     if (filter_var(row[2], FILTER_VALIDATE_EMAIL)):
 
-      // Make sure first name and surname fields have first letter capital
+      # Make sure first name and surname fields have first letter capital
       row[0] =  ucfirst (trim(strtolower(row[0])))
       row[1] =  ucfirst (trim(strtolower(row[1])))
 
       array_push (cleanedRows, row)
-    }
+
 
     else:
-      print PHP_EOL . "Email address row[2] is not valid - this row will not be inserted into table  " . PHP_EOL
-    }
-  }
+      print PHP_EOL + "Email address row[2] is not valid - this row will not be inserted into table  " + PHP_EOL
+
+
 
   return cleanedRows
-}
+
 
 def connectDB (username, password, host, dbname):
   # Connect to Database
 
   link = mysqli_connect(host, username, password, dbname)
 
-  //Display error info on failure
-  if (!link):
+  # Display error info on failure
+  if (not link):
 
-      print "Error: Unable to connect to MySQL." . PHP_EOL
-      print "Debugging errno: " . mysqli_connect_errno() . PHP_EOL
-      print "Debugging error: " . mysqli_connect_error() . PHP_EOL
+      print "Error: Unable to connect to MySQL." + os.linesep
+      print "Debugging errno: "  mysqli_connect_errno() + os.linesep
+      print "Debugging error: " . mysqli_connect_error() + os.linesep
 
       return false
-  }
+
 
   return link
 
-}
+
 
 def checkTable(link, DBtable):
-  //check specified DB table exists
+  # check specified DB table exists
   result = mysqli_query (link,  "SELECT 1 FROM users LIMIT 1")
 
-  if (!result):
-    print PHP_EOL . "Table DBtable does not exist" . PHP_EOL
+  if (not result):
+    print os.linesep + "Table DBtable does not exist" + os.linesep
     return false
-  }
+
   else:
     return true
-  }
-}
+
+
 
 def createTable(link, tableExists):
 
-  // If it exsits, remove so it can reuilt
+  # If it exsits, remove so it can reuilt
   if (tableExists):
 
-    print (PHP_EOL . "removing existing table 'users' " . PHP_EOL)
+    print (os.linesep + "removing existing table 'users' " + os.linesep)
 
     sql = "drop table users"
     result = mysqli_query (link,  sql)
     if (result):
-      print (PHP_EOL . "Table users dropped " . PHP_EOL)
-    }
+      print (os.linesep + "Table users dropped " + os.linesep)
+
     else:
-      //display error output
-      print PHP_EOL . "Could not drop table" . PHP_EOL
-      print "Debugging errno: " . mysqli_connect_errno() . PHP_EOL
-      print "Debugging error: " . mysqli_connect_error() . PHP_EOL
+      # display error output
+      print os.linesep + "Could not drop table" + os.linesep
+      print "Debugging errno: " . mysqli_connect_errno() + os.linesep
+      print "Debugging error: " . mysqli_connect_error() + os.linesep
       return false
-    }
-  }
 
 
-  // SQL to creates a table 'users' in the database with
-  // name, surname, and email fields.\
+
+
+  # SQL to creates a table 'users' in the database with
+  # name, surname, and email fields.\
   sql =  "CREATE TABLE users
       (
          name VARCHAR(40),
@@ -152,172 +286,55 @@ def createTable(link, tableExists):
   result = mysqli_query (link,  sql)
 
   if (result):
-    print (PHP_EOL . "Table users created " . PHP_EOL)
+    print (os.linesep + "Table users created " + os.linesep)
     return true
-  }
+
   else:
-    //display error output
-    print PHP_EOL . "Could not create table" . PHP_EOL
-    print "Debugging errno: " . mysqli_connect_errno() . PHP_EOL
-    print "Debugging error: " . mysqli_connect_error() . PHP_EOL
+    # display error output
+    print os.linesep + "Could not create table" + os.linesep
+    print "Debugging errno: " . mysqli_connect_errno() + os.linesep
+    print "Debugging error: " . mysqli_connect_error() + os.linesep
     return false
-  }
+
 
   return result
-}
+
 
 
 def insertData (link, rows):
-  //inserts each row of data into the table
+  # inserts each row of data into the table
   count = 0
   foreach (rows as row):
 
-    //escape each value to avoid SQL injection problems
+    # escape each value to avoid SQL injection problems
     name = mysqli_real_escape_string(link, row[0])
     surname = mysqli_escape_string(link, row[1])
     email = mysqli_escape_string(link, row[2])
 
 
     # create SQL insert statement and execute
-    #  'insert ignore' used to ignore insertions which fail due to unique key
+    # 'insert ignore' used to ignore insertions which fail due to unique key
 
     sql = 'insert ignore into users (name, surname, email) values ( "'. name .'", "'. surname .'", "'. email .'") '
 
     result = mysqli_query (link,  sql)
 
-    if (!result) :
-      //display error output
+    if (not result) :
+      # display error output
 
-      print PHP_EOL . "Could insert data into table" . PHP_EOL
-      print "Debugging errno: " . mysqli_connect_errno() . PHP_EOL
-      print "Debugging error: " . mysqli_connect_error() . PHP_EOL
+      print os.linesep + 'Could insert data into table + os.linesep
+      print "Debugging errno: " . mysqli_connect_errno() + os.linesep
+      print "Debugging error: " . mysqli_connect_error() + os.linesep
       return false
-    }
 
-    //Count rows inserted for user output
+
+    # Count rows inserted for user output
     count++
 
-  }
+
 
   return count
-}
 
-def run():
-
-  # The main function of the script
-
-
-  //get options
-  options = getopt("u:p:h:",  array("dry_run", "file:", "create_table", "help", "dbname:"))
-
-  if (array_key_exists ("help", options)):
-    // if help in command line options, display help then exit
-    help()
-    return
-  }
-
-
-  //process file name from command line
-  if (array_key_exists  ("file", options)):
-    CSVfile = options["file"]
-  }
-  else:
-    CSVfile = "users.csv" // default file name to use if none specified
-  }
-
-  // get MYSQL user name from command line
-  if (array_key_exists  ("u", options)):
-    DBuser = options["u"]
-  }
-
-  // get MYSQL user name from command line
-  if (array_key_exists  ("p", options)):
-    DBpassword = options["p"]
-  }
-
-  // get MYSQL hostname from command line
-  if (array_key_exists  ("h", options)):
-    DBhost= options["h"]
-  }
-  else:
-    DBhost= "localhost" // default if no host specified
-  }
-
-  // get MYSQL Database from command line
-  if (array_key_exists  ("dbname", options)):
-    DBname= options["dbname"]
-  }
-  else:
-    DBname= "catalystUsers" // default if no DB name specified
-  }
-
-  // get dry_run flag from
-  dry_run = array_key_exists  ("dry_run", options)
-
-  // get create_table flag from
-  create_table = array_key_exists  ("create_table", options)
-
-  if (!DBuser || !DBpassword):
-    print PHP_EOL . "MySQL username or password not set " . PHP_EOL
-    help()
-    return
-  }
-
-  // Connect to MySQL
-  DBconn = connectDB (DBuser, DBpassword, DBhost, DBname)
-
-  if (!DBconn):
-    print "Could not connect to DB" . PHP_EOL
-    return
-  }
-
-  //Check DB table exists
-  tableExists = checkTable (DBconn, "users")
-
-  // fail if table does not exist and table if not to be created
-  if (!tableExists && !create_table):
-    help()
-    return
-  }
-
-  // print error if users table already exists
-  if (tableExists && create_table):
-    print PHP_EOL . "Table 'users' already exists " . PHP_EOL
-  }
-
-  //if --create_table specified, create the table if it doesn't exist
-  if (create_table):
-
-    result = createTable(DBconn, tableExists)
-
-    if (result):
-      print PHP_EOL . "create_table flag specified, no data inserted" . PHP_EOL
-    }
-
-    return
-  }
-
-  // Load CSV data
-  data = loadCSV (CSVfile)
-
-  if (!CSVfile):
-    print "Could not load CSV CSVfile " . PHP_EOL
-    return
-  }
-
-  // Clean CSV data
-  data = cleanData (data)
-  //Stop if dry_run flag set.
-  if (dry_run):
-    print PHP_EOL . "Dry run - no data inserted into table " . PHP_EOL
-    return
-  }
-
-  // Insert data into table
-  result = insertData(DBconn, data)
-
-  if (result):
-    print " result rows inserted /updated " . PHP_EOL
-  }
-}
 """
+
+run()
