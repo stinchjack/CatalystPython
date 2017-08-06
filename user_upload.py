@@ -35,7 +35,7 @@ def run():
 
     #set up argument parser
     parser = argparse.ArgumentParser(description='Process command line flags',
-        add_help=False, usage = None)
+        add_help=False, usage = Suppress)
 
     # setup parser expected arguments. Default values setup where apprpriate
     # default help behavoir overridden
