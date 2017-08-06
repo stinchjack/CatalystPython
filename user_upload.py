@@ -5,6 +5,7 @@ github:
 """
 import os
 import argparse
+import MySQLdb
 import pdb
 
 
@@ -28,6 +29,18 @@ def  help():
   --help - output this help """
 
   print helpText
+
+
+def connectDB (username, password, host, dbname):
+  # Connect to Database
+  try:
+      link = MySQLdb.connect(passwd=passord,db=dbname, host = host, user=username)
+      return link
+  except Exception as e:
+      print "Error: Unable to connect to MySQL." + os.linesep
+      print str(e)
+
+      return False
 
 def run():
 
@@ -188,22 +201,6 @@ def cleanData (rows):
   return cleanedRows
 
 
-def connectDB (username, password, host, dbname):
-  # Connect to Database
-
-  link = mysqli_connect(host, username, password, dbname)
-
-  # Display error info on failure
-  if (not link):
-
-      print "Error: Unable to connect to MySQL." + os.linesep
-      print "Debugging errno: "  mysqli_connect_errno() + os.linesep
-      print "Debugging error: " . mysqli_connect_error() + os.linesep
-
-      return false
-
-
-  return link
 
 
 
