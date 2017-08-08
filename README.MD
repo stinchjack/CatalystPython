@@ -15,12 +15,12 @@ Loads a CSV file with three columns (first name, surname, and email) into a data
 - There is a header row at the first row of the CSV.
 - There are no blank rows in the CSV.
 
-## Requirements:
+## Requirements
 - mysqlclient 1.3.10 - https://github.com/PyMySQL/mysqlclient-python
 - Python 2.7
-- Mysql 5.4
+- Mysql 5.6
 
-## Installation:
+## Installation
 - Create a MySQL database.
 - Install mysqlclient module if needed, for example: sudo apt-get install python-mysqldb
 
@@ -33,10 +33,10 @@ Loads a CSV file with three columns (first name, surname, and email) into a data
 
 See Command line Options, below.
 
-## Example usage:
+## Example usage
 - python user_upload.py-u john -p password
 
-## Command line options:
+## Command line options
 
 - --file [csv file name] - this is the name of the CSV to be parsed (default users.csv if not specified)
 - --create_table - this will cause the MySQL users table to be built (and no further action will be taken)
